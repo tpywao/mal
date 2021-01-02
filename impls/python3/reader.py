@@ -30,12 +30,9 @@ def tokenize(string: str) -> list:
 def read_sequence(
     reader: Reader,
     type_func: MalSequence = mal_list,
-    start='(',
     end=')',
 ) -> list:
     token = reader.next()
-    # if token != start:
-    #     raise Exception("excepted '{start}'")
 
     ast = type_func()
     token = reader.peek()
@@ -49,7 +46,7 @@ def read_sequence(
 
 
 def read_hash_map(reader: Reader) -> MalHashMap:
-    list_ = read_sequence(reader, list, '{', '}')
+    list_ = read_sequence(reader, list, '}')
     return mal_hash_map(*list_)
 
 
@@ -58,7 +55,7 @@ def read_list(reader: Reader) -> MalList:
 
 
 def read_vector(reader: Reader) -> MalVector:
-    return read_sequence(reader, mal_vector, '[', ']')
+    return read_sequence(reader, mal_vector, ']')
 
 
 def read_atom(reader: Reader):
