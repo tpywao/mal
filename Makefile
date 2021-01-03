@@ -95,7 +95,7 @@ IMPLS = ada ada.2 awk bash basic bbc-basic c chuck clojure coffee common-lisp cp
 	matlab miniMAL nasm nim objc objpascal ocaml perl perl6 php picolisp pike plpgsql \
 	plsql powershell ps python python.2 r racket rexx rpython ruby rust scala scheme skew \
 	swift swift3 swift4 swift5 tcl ts vala vb vhdl vimscript wasm wren yorick xslt zig \
-	python3
+	python3 rustacean
 
 EXTENSION = .mal
 
@@ -272,6 +272,7 @@ yorick_STEP_TO_PROG =        impls/yorick/$($(1)).i
 xslt_STEP_TO_PROG =          impls/xslt/$($(1))
 zig_STEP_TO_PROG =           impls/zig/$($(1))
 python3_STEP_TO_PROG =       impls/python3/$($(1)).py
+rustacean_STEP_TO_PROG =     impls/rustacean/$($(1))
 
 #
 # General settings and utility functions
