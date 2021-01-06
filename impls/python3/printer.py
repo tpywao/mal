@@ -8,10 +8,10 @@ def pr_str(ast):
     if MalSequence in type_.mro():
         s = type_.start
         if type_ is MalHashMap:
-            ret = chain.from_iterable((
+            ret = chain.from_iterable(
                 (pr_str(k), pr_str(v))
                 for k, v in ast.items()
-            ))
+            )
             s += ' '.join(ret)
         else:
             s += ' '.join(map(lambda e: pr_str(e), ast))
