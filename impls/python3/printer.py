@@ -1,6 +1,6 @@
 from itertools import chain
 
-from mal_types import MalSequence, MalHashMap
+from mal_types import MalString, MalSequence, MalHashMap, is_mal_keyword
 
 
 def pr_str(ast):
@@ -17,8 +17,11 @@ def pr_str(ast):
             s += ' '.join(map(lambda e: pr_str(e), ast))
         s += type_.end
         return s
-    elif type_ is str:
-        return f'"{ast}"'
+    elif type_ is MalString:
+        if is_mal_keyword(ast):
+            return ast[1:]
+        else:
+            return f'"{ast}"'
     elif ast is None:
         return 'nil'
     elif ast is True:

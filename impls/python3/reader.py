@@ -1,10 +1,10 @@
 from re import compile as re_compile
 
 from mal_types import (
-    MalHashMap, MalList, MalVector, MalSequence,
-    mal_int,
+    MalTypes,
+    mal_int, mal_keyword, mal_string, mal_symbol,
+    MalHashMap, MalList, MalVector,
     mal_hash_map, mal_list, mal_vector,
-    mal_symbol,
 )
 
 
@@ -29,12 +29,11 @@ def tokenize(string: str) -> list:
 
 def read_sequence(
     reader: Reader,
-    type_func: MalSequence = mal_list,
     end=')',
 ) -> list:
     token = reader.next()
 
-    ast = type_func()
+    ast = []
     token = reader.peek()
     while token != end:
         if not token:
@@ -46,19 +45,19 @@ def read_sequence(
 
 
 def read_hash_map(reader: Reader) -> MalHashMap:
-    list_ = read_sequence(reader, list, '}')
+    list_ = read_sequence(reader, '}')
     return mal_hash_map(*list_)
 
 
 def read_list(reader: Reader) -> MalList:
-    return read_sequence(reader, mal_list)
+    return mal_list(*read_sequence(reader))
 
 
 def read_vector(reader: Reader) -> MalVector:
-    return read_sequence(reader, mal_vector, ']')
+    return mal_vector(*read_sequence(reader, ']'))
 
 
-def read_atom(reader: Reader):
+def read_atom(reader: Reader) -> MalTypes:
     int_re = re_compile(r'-?[0-9]+')
     # float_re = re_compile(r'-?[0-9][0-9.]*')
     string_re = re_compile(r'"(:?[\\].|[^\\"])*"')
@@ -68,9 +67,11 @@ def read_atom(reader: Reader):
     # elif float_re.match(token):
     #     return float(token)
     elif string_re.match(token):
-        return token[1:-1]
+        return mal_string(token[1:-1])
     elif token[0] == '"':
         raise Exception("excepted '\"', got EOF")
+    elif token[0] == ':':
+        return mal_keyword(token)
     elif token == 'nil':
         return None
     elif token == 'true':
@@ -81,7 +82,7 @@ def read_atom(reader: Reader):
         return mal_symbol(token)
 
 
-def read_form(reader: Reader):
+def read_form(reader: Reader) -> MalTypes:
     token = reader.peek()
     # comment
     if token[0] == ';':
